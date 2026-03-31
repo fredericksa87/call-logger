@@ -26,6 +26,8 @@
     --green-dim: rgba(67, 122, 34, 0.15);
     --red: #C44040;
     --red-dim: rgba(196, 64, 64, 0.15);
+    --orange: #DA7101;
+    --orange-dim: rgba(218, 113, 1, 0.15);
     --radius: 14px;
     --radius-sm: 10px;
     --radius-xs: 8px;
@@ -48,7 +50,6 @@
     padding-bottom: calc(24px + var(--safe-bottom));
   }
 
-  /* Header */
   .header {
     padding: 16px 20px 12px;
     padding-top: calc(16px + env(safe-area-inset-top, 0px));
@@ -70,11 +71,7 @@
     gap: 8px;
   }
 
-  .header-title svg {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-  }
+  .header-title svg { width: 22px; height: 22px; flex-shrink: 0; }
 
   .header-subtitle {
     font-size: 13px;
@@ -85,11 +82,72 @@
     text-transform: uppercase;
   }
 
-  /* Main container */
-  .container {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 16px;
+  .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+
+  /* Sync status bar */
+  .sync-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    margin: 12px 0 4px;
+    font-size: 13px;
+  }
+
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .sync-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sync-dot.connected { background: var(--green); }
+  .sync-dot.disconnected { background: var(--text-dim); }
+  .sync-dot.syncing { background: var(--orange); animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--red); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .sync-actions { display: flex; gap: 8px; }
+
+  .sync-btn {
+    height: 32px;
+    padding: 0 12px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-xs);
+    background: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .sync-btn:active { transform: scale(0.96); }
+
+  .sync-btn svg { width: 14px; height: 14px; }
+
+  .sync-btn.primary {
+    background: var(--blue-dim);
+    border-color: var(--blue);
+    color: var(--blue);
   }
 
   /* Monthly summary */
@@ -100,26 +158,12 @@
     padding: 14px 18px;
     background: var(--card);
     border-radius: var(--radius);
-    margin: 16px 0;
+    margin: 12px 0;
   }
 
-  .monthly-summary-label {
-    font-size: 13px;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  .monthly-summary-value {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-
-  .monthly-summary-detail {
-    font-size: 13px;
-    color: var(--text-muted);
-    font-weight: 500;
-  }
+  .monthly-summary-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .monthly-summary-value { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .monthly-summary-detail { font-size: 13px; color: var(--text-muted); font-weight: 500; }
 
   /* Form card */
   .form-card {
@@ -129,13 +173,8 @@
     margin-bottom: 16px;
   }
 
-  .form-section {
-    margin-bottom: 20px;
-  }
-
-  .form-section:last-child {
-    margin-bottom: 0;
-  }
+  .form-section { margin-bottom: 20px; }
+  .form-section:last-child { margin-bottom: 0; }
 
   .form-label {
     font-size: 12px;
@@ -147,7 +186,6 @@
     display: block;
   }
 
-  /* Text inputs */
   .text-input {
     width: 100%;
     height: 48px;
@@ -163,19 +201,10 @@
     appearance: none;
   }
 
-  .text-input:focus {
-    outline: none;
-    border-color: var(--blue);
-  }
+  .text-input:focus { outline: none; border-color: var(--blue); }
+  .text-input::placeholder { color: var(--text-dim); }
 
-  .text-input::placeholder {
-    color: var(--text-dim);
-  }
-
-  /* Autocomplete */
-  .autocomplete-wrapper {
-    position: relative;
-  }
+  .autocomplete-wrapper { position: relative; }
 
   .autocomplete-list {
     position: absolute;
@@ -194,9 +223,7 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  .autocomplete-list.active {
-    display: block;
-  }
+  .autocomplete-list.active { display: block; }
 
   .autocomplete-item {
     padding: 13px 16px;
@@ -206,26 +233,12 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
 
-  .autocomplete-item:last-child {
-    border-bottom: none;
-  }
+  .autocomplete-item:last-child { border-bottom: none; }
+  .autocomplete-item:active, .autocomplete-item:hover { background: rgba(255,255,255,0.06); }
 
-  .autocomplete-item:active,
-  .autocomplete-item:hover {
-    background: rgba(255,255,255,0.06);
-  }
+  input[type="date"] { color-scheme: dark; }
 
-  /* Date input */
-  input[type="date"] {
-    color-scheme: dark;
-  }
-
-  /* Duration buttons */
-  .duration-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+  .duration-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 
   .duration-btn {
     height: 44px;
@@ -243,23 +256,10 @@
     flex-shrink: 0;
   }
 
-  .duration-btn:active {
-    transform: scale(0.96);
-  }
+  .duration-btn:active { transform: scale(0.96); }
+  .duration-btn.selected { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); font-weight: 600; }
 
-  .duration-btn.selected {
-    background: var(--blue-dim);
-    border-color: var(--blue);
-    color: var(--blue);
-    font-weight: 600;
-  }
-
-  .duration-custom-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-  }
+  .duration-custom-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
 
   .duration-custom-input {
     width: 80px;
@@ -276,22 +276,10 @@
     appearance: none;
   }
 
-  .duration-custom-input:focus {
-    outline: none;
-    border-color: var(--blue);
-  }
+  .duration-custom-input:focus { outline: none; border-color: var(--blue); }
+  .duration-custom-label { font-size: 14px; color: var(--text-muted); }
 
-  .duration-custom-label {
-    font-size: 14px;
-    color: var(--text-muted);
-  }
-
-  /* Call type buttons */
-  .type-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
   .type-btn {
     height: 56px;
@@ -310,35 +298,12 @@
     line-height: 1.2;
   }
 
-  .type-btn:active {
-    transform: scale(0.97);
-  }
+  .type-btn:active { transform: scale(0.97); }
+  .type-btn.case-discussion { background: var(--blue-dim); color: var(--blue); border-color: transparent; }
+  .type-btn.case-discussion.selected { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .type-btn.program-dev { background: var(--green-dim); color: var(--green); border-color: transparent; }
+  .type-btn.program-dev.selected { background: var(--green); color: #fff; border-color: var(--green); }
 
-  .type-btn.case-discussion {
-    background: var(--blue-dim);
-    color: var(--blue);
-    border-color: transparent;
-  }
-
-  .type-btn.case-discussion.selected {
-    background: var(--blue);
-    color: #fff;
-    border-color: var(--blue);
-  }
-
-  .type-btn.program-dev {
-    background: var(--green-dim);
-    color: var(--green);
-    border-color: transparent;
-  }
-
-  .type-btn.program-dev.selected {
-    background: var(--green);
-    color: #fff;
-    border-color: var(--green);
-  }
-
-  /* Notes */
   .notes-input {
     width: 100%;
     height: 60px;
@@ -354,16 +319,9 @@
     -webkit-appearance: none;
   }
 
-  .notes-input:focus {
-    outline: none;
-    border-color: var(--blue);
-  }
+  .notes-input:focus { outline: none; border-color: var(--blue); }
+  .notes-input::placeholder { color: var(--text-dim); }
 
-  .notes-input::placeholder {
-    color: var(--text-dim);
-  }
-
-  /* Log button */
   .log-btn {
     width: 100%;
     height: 54px;
@@ -379,23 +337,10 @@
     letter-spacing: -0.2px;
   }
 
-  .log-btn:active {
-    transform: scale(0.98);
-    opacity: 0.9;
-  }
+  .log-btn:active { transform: scale(0.98); opacity: 0.9; }
+  .log-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-  .log-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* Action bar */
-  .action-bar {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0 12px;
-  }
+  .action-bar { display: flex; gap: 10px; margin: 20px 0 12px; }
 
   .action-btn {
     flex: 1;
@@ -415,22 +360,12 @@
     gap: 6px;
   }
 
-  .action-btn:active {
-    transform: scale(0.97);
-  }
+  .action-btn:active { transform: scale(0.97); }
+  .action-btn svg { width: 16px; height: 16px; }
 
-  .action-btn svg {
-    width: 16px;
-    height: 16px;
-  }
+  .section-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 24px 0 16px; }
 
-  /* Month navigation */
-  .month-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 0 12px;
-  }
+  .month-nav { display: flex; align-items: center; justify-content: space-between; margin: 0 0 12px; }
 
   .month-nav-btn {
     width: 40px;
@@ -446,35 +381,13 @@
     transition: background 0.15s;
   }
 
-  .month-nav-btn:active {
-    background: rgba(255,255,255,0.06);
-  }
+  .month-nav-btn:active { background: rgba(255,255,255,0.06); }
+  .month-nav-btn svg { width: 20px; height: 20px; }
+  .month-nav-title { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
 
-  .month-nav-btn svg {
-    width: 20px;
-    height: 20px;
-  }
+  .date-group { margin-bottom: 16px; }
+  .date-group-header { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; padding-left: 2px; }
 
-  .month-nav-title {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-  }
-
-  /* Date group */
-  .date-group {
-    margin-bottom: 16px;
-  }
-
-  .date-group-header {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    padding-left: 2px;
-  }
-
-  /* Call entry */
   .call-entry {
     background: var(--card);
     border-radius: var(--radius-sm);
@@ -487,64 +400,16 @@
     transition: transform 0.2s, opacity 0.2s;
   }
 
-  .call-entry-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
-
-  .call-entry-dot.case-discussion {
-    background: var(--blue);
-  }
-
-  .call-entry-dot.program-dev {
-    background: var(--green);
-  }
-
-  .call-entry-content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .call-entry-name {
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-  }
-
-  .call-entry-meta {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  .call-entry-type {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 6px;
-    margin-top: 5px;
-  }
-
-  .call-entry-type.case-discussion {
-    background: var(--blue-dim);
-    color: var(--blue);
-  }
-
-  .call-entry-type.program-dev {
-    background: var(--green-dim);
-    color: var(--green);
-  }
-
-  .call-entry-notes {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 4px;
-    font-style: italic;
-  }
+  .call-entry-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .call-entry-dot.case-discussion { background: var(--blue); }
+  .call-entry-dot.program-dev { background: var(--green); }
+  .call-entry-content { flex: 1; min-width: 0; }
+  .call-entry-name { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+  .call-entry-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .call-entry-type { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 6px; margin-top: 5px; }
+  .call-entry-type.case-discussion { background: var(--blue-dim); color: var(--blue); }
+  .call-entry-type.program-dev { background: var(--green-dim); color: var(--green); }
+  .call-entry-notes { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
 
   .call-entry-delete {
     width: 36px;
@@ -562,36 +427,13 @@
     margin: -4px -6px -4px 0;
   }
 
-  .call-entry-delete:active,
-  .call-entry-delete:hover {
-    background: var(--red-dim);
-    color: var(--red);
-  }
+  .call-entry-delete:active, .call-entry-delete:hover { background: var(--red-dim); color: var(--red); }
+  .call-entry-delete svg { width: 18px; height: 18px; }
 
-  .call-entry-delete svg {
-    width: 18px;
-    height: 18px;
-  }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+  .empty-state-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-state-text { font-size: 15px; line-height: 1.5; }
 
-  /* Empty state */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text-dim);
-  }
-
-  .empty-state-icon {
-    font-size: 40px;
-    margin-bottom: 12px;
-    opacity: 0.4;
-  }
-
-  .empty-state-text {
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  /* Toast */
   .toast {
     position: fixed;
     bottom: calc(24px + var(--safe-bottom));
@@ -610,19 +452,8 @@
     white-space: nowrap;
   }
 
-  .toast.visible {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
+  .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-  /* Section divider */
-  .section-divider {
-    height: 1px;
-    background: rgba(255,255,255,0.06);
-    margin: 24px 0 16px;
-  }
-
-  /* Confirm dialog */
   .confirm-overlay {
     position: fixed;
     inset: 0;
@@ -636,30 +467,45 @@
     -webkit-backdrop-filter: blur(4px);
   }
 
-  .confirm-overlay.active {
-    display: flex;
-  }
+  .confirm-overlay.active { display: flex; }
 
   .confirm-dialog {
     background: var(--card);
     border-radius: var(--radius);
     padding: 24px;
-    max-width: 300px;
+    max-width: 340px;
     width: 100%;
     text-align: center;
   }
 
-  .confirm-dialog p {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    line-height: 1.4;
+  .confirm-dialog p { font-size: 16px; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
+
+  .confirm-dialog .setup-instructions {
+    text-align: left;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-weight: 400;
   }
 
-  .confirm-actions {
-    display: flex;
-    gap: 10px;
+  .confirm-dialog .setup-instructions ol {
+    padding-left: 18px;
+    margin: 8px 0;
   }
+
+  .confirm-dialog .setup-instructions a {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  .confirm-dialog input.text-input {
+    margin-bottom: 16px;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .confirm-actions { display: flex; gap: 10px; }
 
   .confirm-actions button {
     flex: 1;
@@ -672,17 +518,10 @@
     cursor: pointer;
   }
 
-  .confirm-cancel {
-    background: var(--bg);
-    color: var(--text);
-  }
+  .confirm-cancel { background: var(--bg); color: var(--text); }
+  .confirm-delete { background: var(--red); color: #fff; }
+  .confirm-save { background: var(--blue); color: #fff; }
 
-  .confirm-delete {
-    background: var(--red);
-    color: #fff;
-  }
-
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 0; }
 </style>
 </head>
@@ -699,6 +538,24 @@
 </header>
 
 <div class="container">
+  <!-- Cloud Sync Bar -->
+  <div class="sync-bar" id="syncBar">
+    <div class="sync-status">
+      <div class="sync-dot disconnected" id="syncDot"></div>
+      <span id="syncLabel">Cloud sync off</span>
+    </div>
+    <div class="sync-actions">
+      <button class="sync-btn" id="syncSetupBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Setup
+      </button>
+      <button class="sync-btn primary" id="syncNowBtn" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        Sync
+      </button>
+    </div>
+  </div>
+
   <!-- Monthly Summary -->
   <div class="monthly-summary">
     <div>
@@ -710,7 +567,6 @@
 
   <!-- Form -->
   <div class="form-card">
-    <!-- Contact Name -->
     <div class="form-section">
       <label class="form-label">Contact Name</label>
       <div class="autocomplete-wrapper">
@@ -718,14 +574,10 @@
         <div class="autocomplete-list" id="autocompleteList"></div>
       </div>
     </div>
-
-    <!-- Date -->
     <div class="form-section">
       <label class="form-label">Date</label>
       <input type="date" class="text-input" id="dateInput">
     </div>
-
-    <!-- Duration -->
     <div class="form-section">
       <label class="form-label">Duration</label>
       <div class="duration-grid" id="durationGrid">
@@ -742,8 +594,6 @@
         <span class="duration-custom-label">minutes (custom)</span>
       </div>
     </div>
-
-    <!-- Call Type -->
     <div class="form-section">
       <label class="form-label">Call Type</label>
       <div class="type-grid">
@@ -751,14 +601,10 @@
         <button class="type-btn program-dev" data-type="Program Development" id="btnProgramDev">Program Development</button>
       </div>
     </div>
-
-    <!-- Notes -->
     <div class="form-section">
       <label class="form-label">Notes <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
       <textarea class="notes-input" id="notesInput" placeholder="Brief note…"></textarea>
     </div>
-
-    <!-- Log Button -->
     <button class="log-btn" id="logBtn" disabled>Log Call</button>
   </div>
 
@@ -774,7 +620,6 @@
     </button>
   </div>
 
-  <!-- Month navigation -->
   <div class="section-divider"></div>
   <div class="month-nav">
     <button class="month-nav-btn" id="prevMonth">
@@ -786,18 +631,17 @@
     </button>
   </div>
 
-  <!-- Call Log -->
   <div id="callLog"></div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Confirm Dialog -->
+<!-- Confirm / Setup Dialog -->
 <div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-dialog">
+  <div class="confirm-dialog" id="confirmDialog">
     <p id="confirmMessage">Delete this entry?</p>
-    <div class="confirm-actions">
+    <div id="confirmBody"></div>
+    <div class="confirm-actions" id="confirmActions">
       <button class="confirm-cancel" id="confirmCancel">Cancel</button>
       <button class="confirm-delete" id="confirmDelete">Delete</button>
     </div>
@@ -808,18 +652,16 @@
 (function() {
   'use strict';
 
-  // ─── DATA ───
+  // ─── CONFIG ───
+  const REPO_OWNER = 'fredericksa87';
+  const REPO_NAME = 'call-logger';
+  const DATA_FILE = 'call-data.json';
+  const API_BASE = 'https://api.github.com';
+
   const CONTACTS = [
-    'Debby Miller',
-    'Dr. Jake Rice',
-    'Ashley Thompson',
-    'Dr. Sharalya',
-    'Dr. Mulder',
-    'Dr. Siddiqui',
-    'Dr. Gamber',
-    'Dr. Baselle',
-    'Dr. Lupton',
-    'Dr. Yallapragada'
+    'Debby Miller', 'Dr. Jake Rice', 'Ashley Thompson', 'Dr. Sharalya',
+    'Dr. Mulder', 'Dr. Siddiqui', 'Dr. Gamber', 'Dr. Baselle',
+    'Dr. Lupton', 'Dr. Yallapragada'
   ];
 
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -827,14 +669,13 @@
   // ─── STATE ───
   let selectedDuration = null;
   let selectedType = null;
-  let viewYear = 2026;
-  let viewMonth = 2; // 0-indexed, March = 2
   let pendingDeleteId = null;
+  let fileSha = null; // GitHub file SHA for updates
+  let isSyncing = false;
 
-  // Init view to current month
   const now = new Date();
-  viewYear = now.getFullYear();
-  viewMonth = now.getMonth();
+  let viewYear = now.getFullYear();
+  let viewMonth = now.getMonth();
 
   // ─── ELEMENTS ───
   const contactInput = document.getElementById('contactInput');
@@ -849,35 +690,230 @@
   const exportBtn = document.getElementById('exportBtn');
   const clearBtn = document.getElementById('clearBtn');
   const callLog = document.getElementById('callLog');
-  const toast = document.getElementById('toast');
+  const toastEl = document.getElementById('toast');
   const summaryLabel = document.getElementById('summaryLabel');
   const summaryValue = document.getElementById('summaryValue');
   const summaryDetail = document.getElementById('summaryDetail');
   const monthNavTitle = document.getElementById('monthNavTitle');
-  const prevMonth = document.getElementById('prevMonth');
-  const nextMonth = document.getElementById('nextMonth');
+  const prevMonthBtn = document.getElementById('prevMonth');
+  const nextMonthBtn = document.getElementById('nextMonth');
   const confirmOverlay = document.getElementById('confirmOverlay');
   const confirmMessage = document.getElementById('confirmMessage');
+  const confirmBody = document.getElementById('confirmBody');
+  const confirmActions = document.getElementById('confirmActions');
   const confirmCancel = document.getElementById('confirmCancel');
   const confirmDelete = document.getElementById('confirmDelete');
+  const syncDot = document.getElementById('syncDot');
+  const syncLabel = document.getElementById('syncLabel');
+  const syncSetupBtn = document.getElementById('syncSetupBtn');
+  const syncNowBtn = document.getElementById('syncNowBtn');
 
-  // ─── STORAGE ───
-  var _memoryStore = [];
+  // ─── LOCAL STORAGE ───
   var _storageAvailable = false;
-  try { var _t = '__test__'; window['localStorage'].setItem(_t, '1'); window['localStorage'].removeItem(_t); _storageAvailable = true; } catch(e) {}
+  try { var _t = '__test__'; localStorage.setItem(_t, '1'); localStorage.removeItem(_t); _storageAvailable = true; } catch(e) {}
 
   function getEntries() {
     if (_storageAvailable) {
-      try { return JSON.parse(window['localStorage'].getItem('callLogEntries') || '[]'); } catch { return []; }
+      try { return JSON.parse(localStorage.getItem('callLogEntries') || '[]'); } catch { return []; }
     }
-    return _memoryStore;
+    return [];
   }
 
   function saveEntries(entries) {
     if (_storageAvailable) {
-      try { window['localStorage'].setItem('callLogEntries', JSON.stringify(entries)); } catch {}
+      try { localStorage.setItem('callLogEntries', JSON.stringify(entries)); } catch {}
     }
-    _memoryStore = entries;
+  }
+
+  function getToken() {
+    if (_storageAvailable) {
+      return localStorage.getItem('ghToken') || '';
+    }
+    return '';
+  }
+
+  function setToken(t) {
+    if (_storageAvailable) {
+      localStorage.setItem('ghToken', t);
+    }
+  }
+
+  // ─── GITHUB SYNC ───
+  function updateSyncUI(state, msg) {
+    syncDot.className = 'sync-dot ' + state;
+    syncLabel.textContent = msg;
+    if (state === 'connected' || state === 'syncing') {
+      syncNowBtn.style.display = 'flex';
+      syncSetupBtn.textContent = '';
+      syncSetupBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>';
+    } else {
+      syncNowBtn.style.display = 'none';
+    }
+  }
+
+  async function ghFetch(path, options = {}) {
+    const token = getToken();
+    if (!token) throw new Error('No token');
+    const headers = {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...options.headers
+    };
+    const resp = await fetch(API_BASE + path, { ...options, headers });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.message || resp.statusText);
+    }
+    return resp.json();
+  }
+
+  async function pullFromGitHub() {
+    try {
+      const data = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_FILE}`);
+      fileSha = data.sha;
+      const content = JSON.parse(atob(data.content.replace(/\n/g, '')));
+      return content;
+    } catch (e) {
+      if (e.message && e.message.includes('Not Found')) {
+        fileSha = null;
+        return null; // File doesn't exist yet
+      }
+      throw e;
+    }
+  }
+
+  async function pushToGitHub(entries) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(entries, null, 2))));
+    const body = {
+      message: 'Update call log data',
+      content: content
+    };
+    if (fileSha) body.sha = fileSha;
+
+    const data = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_FILE}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    fileSha = data.content.sha;
+  }
+
+  async function syncData() {
+    const token = getToken();
+    if (!token || isSyncing) return;
+
+    isSyncing = true;
+    updateSyncUI('syncing', 'Syncing...');
+
+    try {
+      // Pull remote data
+      const remote = await pullFromGitHub();
+      const local = getEntries();
+
+      // Merge: use ID-based deduplication
+      let merged;
+      if (remote && Array.isArray(remote)) {
+        const idMap = new Map();
+        remote.forEach(e => idMap.set(String(e.id), e));
+        local.forEach(e => idMap.set(String(e.id), e)); // local wins on conflict
+        merged = Array.from(idMap.values());
+      } else {
+        merged = local;
+      }
+
+      // Save merged locally
+      saveEntries(merged);
+
+      // Push merged to GitHub
+      await pushToGitHub(merged);
+
+      updateSyncUI('connected', 'Synced just now');
+      renderLog();
+    } catch (e) {
+      console.error('Sync error:', e);
+      updateSyncUI('error', 'Sync failed');
+      showToast('Sync failed: ' + e.message);
+    } finally {
+      isSyncing = false;
+    }
+  }
+
+  async function testToken() {
+    try {
+      await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}`);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Auto-sync on changes
+  async function autoSync() {
+    if (getToken()) {
+      await syncData();
+    }
+  }
+
+  // ─── SETUP DIALOG ───
+  syncSetupBtn.addEventListener('click', function() {
+    const currentToken = getToken();
+    confirmMessage.textContent = 'Cloud Sync Setup';
+    confirmBody.innerHTML = `
+      <div class="setup-instructions">
+        <p>Connect to GitHub to auto-sync your call logs. The monthly timesheet automation will pull data directly.</p>
+        <ol>
+          <li>Go to <a href="https://github.com/settings/tokens?type=beta" target="_blank">GitHub Token Settings</a></li>
+          <li>Click "Generate new token"</li>
+          <li>Name it "Call Logger"</li>
+          <li>Under Repository access, select "Only select repositories" and pick <strong>call-logger</strong></li>
+          <li>Under Permissions > Repository permissions, set <strong>Contents</strong> to "Read and write"</li>
+          <li>Click "Generate token" and paste below</li>
+        </ol>
+      </div>
+      <input type="password" class="text-input" id="tokenInput" placeholder="github_pat_..." value="${currentToken}">
+    `;
+    confirmActions.innerHTML = `
+      <button class="confirm-cancel" onclick="app.closeDialog()">Cancel</button>
+      <button class="confirm-save" onclick="app.saveToken()">Save & Sync</button>
+    `;
+    confirmOverlay.classList.add('active');
+  });
+
+  syncNowBtn.addEventListener('click', function() {
+    syncData();
+  });
+
+  function closeDialog() {
+    confirmOverlay.classList.remove('active');
+    confirmBody.innerHTML = '';
+    confirmActions.innerHTML = `
+      <button class="confirm-cancel" id="confirmCancel">Cancel</button>
+      <button class="confirm-delete" id="confirmDelete">Delete</button>
+    `;
+    rebindConfirmButtons();
+  }
+
+  async function saveTokenHandler() {
+    const input = document.getElementById('tokenInput');
+    if (!input) return;
+    const token = input.value.trim();
+    if (!token) {
+      showToast('Please enter a token');
+      return;
+    }
+    setToken(token);
+    closeDialog();
+
+    const valid = await testToken();
+    if (valid) {
+      showToast('Connected to GitHub');
+      await syncData();
+    } else {
+      updateSyncUI('error', 'Invalid token');
+      showToast('Token invalid — check permissions');
+      setToken('');
+    }
   }
 
   // ─── DATE DEFAULT ───
@@ -890,18 +926,13 @@
   // ─── AUTOCOMPLETE ───
   contactInput.addEventListener('input', function() {
     const val = this.value.trim().toLowerCase();
-    if (!val) {
-      autocompleteList.classList.remove('active');
-      return;
-    }
+    if (!val) { autocompleteList.classList.remove('active'); return; }
     const matches = CONTACTS.filter(c => c.toLowerCase().includes(val));
     if (matches.length === 0 || (matches.length === 1 && matches[0].toLowerCase() === val)) {
       autocompleteList.classList.remove('active');
       return;
     }
-    autocompleteList.innerHTML = matches.map(m =>
-      `<div class="autocomplete-item">${m}</div>`
-    ).join('');
+    autocompleteList.innerHTML = matches.map(m => `<div class="autocomplete-item">${m}</div>`).join('');
     autocompleteList.classList.add('active');
     updateLogBtn();
   });
@@ -910,9 +941,7 @@
     setTimeout(() => autocompleteList.classList.remove('active'), 150);
   });
 
-  contactInput.addEventListener('keydown', function() {
-    setTimeout(updateLogBtn, 0);
-  });
+  contactInput.addEventListener('keydown', function() { setTimeout(updateLogBtn, 0); });
 
   autocompleteList.addEventListener('click', function(e) {
     if (e.target.classList.contains('autocomplete-item')) {
@@ -958,7 +987,6 @@
     updateLogBtn();
   });
 
-  // ─── LOG BUTTON STATE ───
   function updateLogBtn() {
     const hasContact = contactInput.value.trim().length > 0;
     const hasDuration = selectedDuration > 0;
@@ -983,7 +1011,6 @@
     entries.push(entry);
     saveEntries(entries);
 
-    // Reset form
     contactInput.value = '';
     selectedDuration = null;
     selectedType = null;
@@ -994,30 +1021,28 @@
     btnProgramDev.classList.remove('selected');
     logBtn.disabled = true;
 
-    // Set view to the logged entry's month
     const d = new Date(entry.date + 'T00:00:00');
     viewYear = d.getFullYear();
     viewMonth = d.getMonth();
 
     renderLog();
     showToast('Call logged');
+
+    // Auto-sync after logging
+    autoSync();
   });
 
   // ─── RENDER LOG ───
   function renderLog() {
     const entries = getEntries();
-
-    // Filter to view month
     const filtered = entries.filter(e => {
       const d = new Date(e.date + 'T00:00:00');
       return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
     });
 
-    // Update month nav
     monthNavTitle.textContent = MONTHS[viewMonth] + ' ' + viewYear;
     summaryLabel.textContent = MONTHS[viewMonth] + ' ' + viewYear;
 
-    // Calculate totals
     const totalMin = filtered.reduce((sum, e) => sum + (e.duration || 0), 0);
     const hrs = totalMin / 60;
     if (totalMin >= 60) {
@@ -1029,30 +1054,20 @@
     summaryDetail.textContent = filtered.length + ' call' + (filtered.length !== 1 ? 's' : '');
 
     if (filtered.length === 0) {
-      callLog.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">📞</div>
-          <div class="empty-state-text">No calls logged this month.<br>Use the form above to log a call.</div>
-        </div>
-      `;
+      callLog.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📞</div><div class="empty-state-text">No calls logged this month.<br>Use the form above to log a call.</div></div>`;
       return;
     }
 
-    // Group by date
     const groups = {};
     filtered.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
-    filtered.forEach(e => {
-      if (!groups[e.date]) groups[e.date] = [];
-      groups[e.date].push(e);
-    });
+    filtered.forEach(e => { if (!groups[e.date]) groups[e.date] = []; groups[e.date].push(e); });
 
     let html = '';
     for (const [date, items] of Object.entries(groups)) {
       const d = new Date(date + 'T00:00:00');
       const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const label = dayNames[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
-      html += `<div class="date-group">`;
-      html += `<div class="date-group-header">${label}</div>`;
+      html += `<div class="date-group"><div class="date-group-header">${label}</div>`;
       items.forEach(e => {
         const typeClass = e.type === 'Case Discussion' ? 'case-discussion' : 'program-dev';
         const durLabel = e.duration >= 60 ? (e.duration / 60) + ' hr' : e.duration + ' min';
@@ -1068,50 +1083,39 @@
             <button class="call-entry-delete" onclick="app.confirmDeleteEntry(${e.id})" aria-label="Delete entry">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
             </button>
-          </div>
-        `;
+          </div>`;
       });
       html += `</div>`;
     }
     callLog.innerHTML = html;
   }
 
-  function escHtml(s) {
-    const el = document.createElement('span');
-    el.textContent = s;
-    return el.innerHTML;
-  }
+  function escHtml(s) { const el = document.createElement('span'); el.textContent = s; return el.innerHTML; }
 
-  // ─── DELETE ENTRY ───
+  // ─── DELETE ───
   function confirmDeleteEntry(id) {
     pendingDeleteId = id;
     confirmMessage.textContent = 'Delete this call entry?';
+    confirmBody.innerHTML = '';
+    confirmActions.innerHTML = `
+      <button class="confirm-cancel" onclick="app.closeDialog()">Cancel</button>
+      <button class="confirm-delete" onclick="app.doDelete()">Delete</button>
+    `;
     confirmOverlay.classList.add('active');
   }
 
-  confirmCancel.addEventListener('click', function() {
-    confirmOverlay.classList.remove('active');
-    pendingDeleteId = null;
-  });
-
-  confirmDelete.addEventListener('click', function() {
-    if (pendingDeleteId !== null) {
+  function doDelete() {
+    if (pendingDeleteId !== null && pendingDeleteId !== 'clear-month') {
       let entries = getEntries();
       entries = entries.filter(e => e.id !== pendingDeleteId);
       saveEntries(entries);
       pendingDeleteId = null;
-      confirmOverlay.classList.remove('active');
+      closeDialog();
       renderLog();
       showToast('Entry deleted');
+      autoSync();
     }
-  });
-
-  confirmOverlay.addEventListener('click', function(e) {
-    if (e.target === confirmOverlay) {
-      confirmOverlay.classList.remove('active');
-      pendingDeleteId = null;
-    }
-  });
+  }
 
   // ─── CLEAR MONTH ───
   clearBtn.addEventListener('click', function() {
@@ -1119,31 +1123,34 @@
       const d = new Date(e.date + 'T00:00:00');
       return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
     });
-    if (filtered.length === 0) {
-      showToast('No entries to clear');
-      return;
-    }
+    if (filtered.length === 0) { showToast('No entries to clear'); return; }
     pendingDeleteId = 'clear-month';
     confirmMessage.textContent = `Clear all ${filtered.length} entries for ${MONTHS[viewMonth]}?`;
+    confirmBody.innerHTML = '';
+    confirmActions.innerHTML = `
+      <button class="confirm-cancel" onclick="app.closeDialog()">Cancel</button>
+      <button class="confirm-delete" onclick="app.doClearMonth()">Clear</button>
+    `;
     confirmOverlay.classList.add('active');
   });
 
-  // Override confirm delete for clear-month
-  const origConfirmDelete = confirmDelete.onclick;
-  confirmDelete.addEventListener('click', function() {
-    if (pendingDeleteId === 'clear-month') {
-      let entries = getEntries();
-      entries = entries.filter(e => {
-        const d = new Date(e.date + 'T00:00:00');
-        return !(d.getFullYear() === viewYear && d.getMonth() === viewMonth);
-      });
-      saveEntries(entries);
-      pendingDeleteId = null;
-      confirmOverlay.classList.remove('active');
-      renderLog();
-      showToast('Month cleared');
-    }
-  });
+  function doClearMonth() {
+    let entries = getEntries();
+    entries = entries.filter(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      return !(d.getFullYear() === viewYear && d.getMonth() === viewMonth);
+    });
+    saveEntries(entries);
+    pendingDeleteId = null;
+    closeDialog();
+    renderLog();
+    showToast('Month cleared');
+    autoSync();
+  }
+
+  function rebindConfirmButtons() {
+    // Re-get elements after innerHTML change
+  }
 
   // ─── EXPORT ───
   exportBtn.addEventListener('click', function() {
@@ -1153,10 +1160,7 @@
       return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
     });
 
-    if (filtered.length === 0) {
-      showToast('No entries to export');
-      return;
-    }
+    if (filtered.length === 0) { showToast('No entries to export'); return; }
 
     filtered.sort((a, b) => a.date.localeCompare(b.date) || a.id - b.id);
 
@@ -1167,8 +1171,7 @@
       const d = new Date(e.date + 'T00:00:00');
       const mm = String(d.getMonth() + 1).padStart(2, '0');
       const dd = String(d.getDate()).padStart(2, '0');
-      const durLabel = e.duration + ' min';
-      let line = `${mm}/${dd} - ${e.name} (${durLabel}) - ${e.type}`;
+      let line = `${mm}/${dd} - ${e.name} (${e.duration} min) - ${e.type}`;
       if (e.notes) line += ` - ${e.notes}`;
       lines.push(line);
     });
@@ -1178,13 +1181,8 @@
     lines.push(`Total: ${totalMin} min (${totalHrs} hours)`);
 
     const text = lines.join('\n');
-
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('Copied to clipboard');
-      }).catch(() => {
-        fallbackCopy(text);
-      });
+      navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard')).catch(() => fallbackCopy(text));
     } else {
       fallbackCopy(text);
     }
@@ -1197,23 +1195,19 @@
     ta.style.left = '-9999px';
     document.body.appendChild(ta);
     ta.select();
-    try {
-      document.execCommand('copy');
-      showToast('Copied to clipboard');
-    } catch {
-      showToast('Could not copy');
-    }
+    try { document.execCommand('copy'); showToast('Copied to clipboard'); }
+    catch { showToast('Could not copy'); }
     document.body.removeChild(ta);
   }
 
   // ─── MONTH NAV ───
-  prevMonth.addEventListener('click', function() {
+  prevMonthBtn.addEventListener('click', function() {
     viewMonth--;
     if (viewMonth < 0) { viewMonth = 11; viewYear--; }
     renderLog();
   });
 
-  nextMonth.addEventListener('click', function() {
+  nextMonthBtn.addEventListener('click', function() {
     viewMonth++;
     if (viewMonth > 11) { viewMonth = 0; viewYear++; }
     renderLog();
@@ -1221,16 +1215,28 @@
 
   // ─── TOAST ───
   function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('visible');
-    setTimeout(() => toast.classList.remove('visible'), 2000);
+    toastEl.textContent = msg;
+    toastEl.classList.add('visible');
+    setTimeout(() => toastEl.classList.remove('visible'), 2000);
   }
 
-  // ─── EXPOSE FOR INLINE HANDLERS ───
-  window.app = { confirmDeleteEntry };
+  // ─── EXPOSE ───
+  window.app = { confirmDeleteEntry, closeDialog, doDelete, doClearMonth, saveToken: saveTokenHandler };
 
   // ─── INIT ───
   renderLog();
+
+  // Check if token exists and auto-sync
+  if (getToken()) {
+    testToken().then(valid => {
+      if (valid) {
+        updateSyncUI('connected', 'Connected');
+        syncData();
+      } else {
+        updateSyncUI('error', 'Token expired');
+      }
+    });
+  }
 })();
 </script>
 </body>
