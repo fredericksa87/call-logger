@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Call Logger">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1C1B19">
+<title>Call Logger — Medical Directorship</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234F98A3'/><path d='M9 11c0-1 .8-2 2-2 1.5 0 3 1.5 3.5 3s.5 2-.5 3l-1 1c1 2 3 4 5 5l1-1c1-1 1.5-1 3-.5s3 2 3 3.5c0 1.2-1 2-2 2-4 0-8-3-11-6S6 15 9 11z' fill='white'/></svg>">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1C1B19;
+    --card: #2A2927;
+    --card-hover: #333230;
+    --text: #F0EEEB;
+    --text-muted: #9A9895;
+    --text-dim: #6B6966;
+    --blue: #4F98A3;
+    --blue-dim: rgba(79, 152, 163, 0.15);
+    --green: #437A22;
+    --green-dim: rgba(67, 122, 34, 0.15);
+    --red: #C44040;
+    --red-dim: rgba(196, 64, 64, 0.15);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --radius-xs: 8px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: calc(24px + var(--safe-bottom));
+  }
+
+  /* Header */
+  .header {
+    padding: 16px 20px 12px;
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .header-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .header-title svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  /* Main container */
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* Monthly summary */
+  .monthly-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--card);
+    border-radius: var(--radius);
+    margin: 16px 0;
+  }
+
+  .monthly-summary-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .monthly-summary-value {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .monthly-summary-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* Form card */
+  .form-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    margin-bottom: 16px;
+  }
+
+  .form-section {
+    margin-bottom: 20px;
+  }
+
+  .form-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Text inputs */
+  .text-input {
+    width: 100%;
+    height: 48px;
+    background: var(--bg);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 16px;
+    padding: 0 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .text-input:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+
+  .text-input::placeholder {
+    color: var(--text-dim);
+  }
+
+  /* Autocomplete */
+  .autocomplete-wrapper {
+    position: relative;
+  }
+
+  .autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #333230;
+    border-radius: var(--radius-sm);
+    margin-top: 4px;
+    z-index: 50;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: none;
+    max-height: 220px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .autocomplete-list.active {
+    display: block;
+  }
+
+  .autocomplete-item {
+    padding: 13px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .autocomplete-item:last-child {
+    border-bottom: none;
+  }
+
+  .autocomplete-item:active,
+  .autocomplete-item:hover {
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* Date input */
+  input[type="date"] {
+    color-scheme: dark;
+  }
+
+  /* Duration buttons */
+  .duration-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .duration-btn {
+    height: 44px;
+    min-width: 60px;
+    padding: 0 14px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-xs);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .duration-btn:active {
+    transform: scale(0.96);
+  }
+
+  .duration-btn.selected {
+    background: var(--blue-dim);
+    border-color: var(--blue);
+    color: var(--blue);
+    font-weight: 600;
+  }
+
+  .duration-custom-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .duration-custom-input {
+    width: 80px;
+    height: 44px;
+    background: var(--bg);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-xs);
+    color: var(--text);
+    font-size: 16px;
+    padding: 0 12px;
+    font-family: inherit;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .duration-custom-input:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+
+  .duration-custom-label {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* Call type buttons */
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .type-btn {
+    height: 56px;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 10px;
+    line-height: 1.2;
+  }
+
+  .type-btn:active {
+    transform: scale(0.97);
+  }
+
+  .type-btn.case-discussion {
+    background: var(--blue-dim);
+    color: var(--blue);
+    border-color: transparent;
+  }
+
+  .type-btn.case-discussion.selected {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+
+  .type-btn.program-dev {
+    background: var(--green-dim);
+    color: var(--green);
+    border-color: transparent;
+  }
+
+  .type-btn.program-dev.selected {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+
+  /* Notes */
+  .notes-input {
+    width: 100%;
+    height: 60px;
+    background: var(--bg);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 16px;
+    padding: 12px 14px;
+    font-family: inherit;
+    resize: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .notes-input:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+
+  .notes-input::placeholder {
+    color: var(--text-dim);
+  }
+
+  /* Log button */
+  .log-btn {
+    width: 100%;
+    height: 54px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: -0.2px;
+  }
+
+  .log-btn:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  .log-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Action bar */
+  .action-bar {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 12px;
+  }
+
+  .action-btn {
+    flex: 1;
+    height: 44px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .action-btn:active {
+    transform: scale(0.97);
+  }
+
+  .action-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Month navigation */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 12px;
+  }
+
+  .month-nav-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.15s;
+  }
+
+  .month-nav-btn:active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .month-nav-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .month-nav-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  /* Date group */
+  .date-group {
+    margin-bottom: 16px;
+  }
+
+  .date-group-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  /* Call entry */
+  .call-entry {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .call-entry-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .call-entry-dot.case-discussion {
+    background: var(--blue);
+  }
+
+  .call-entry-dot.program-dev {
+    background: var(--green);
+  }
+
+  .call-entry-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .call-entry-name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  .call-entry-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .call-entry-type {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 5px;
+  }
+
+  .call-entry-type.case-discussion {
+    background: var(--blue-dim);
+    color: var(--blue);
+  }
+
+  .call-entry-type.program-dev {
+    background: var(--green-dim);
+    color: var(--green);
+  }
+
+  .call-entry-notes {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .call-entry-delete {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    margin: -4px -6px -4px 0;
+  }
+
+  .call-entry-delete:active,
+  .call-entry-delete:hover {
+    background: var(--red-dim);
+    color: var(--red);
+  }
+
+  .call-entry-delete svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+  }
+
+  .empty-state-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+
+  .empty-state-text {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: calc(24px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #444;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Section divider */
+  .section-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 24px 0 16px;
+  }
+
+  /* Confirm dialog */
+  .confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .confirm-overlay.active {
+    display: flex;
+  }
+
+  .confirm-dialog {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 300px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .confirm-dialog p {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .confirm-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .confirm-actions button {
+    flex: 1;
+    height: 44px;
+    border-radius: var(--radius-xs);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+  }
+
+  .confirm-cancel {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .confirm-delete {
+    background: var(--red);
+    color: #fff;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+    </svg>
+    Call Logger
+  </div>
+  <div class="header-subtitle">Medical Directorship</div>
+</header>
+
+<div class="container">
+  <!-- Monthly Summary -->
+  <div class="monthly-summary">
+    <div>
+      <div class="monthly-summary-label" id="summaryLabel">March 2026</div>
+      <div class="monthly-summary-value" id="summaryValue">0 min</div>
+    </div>
+    <div class="monthly-summary-detail" id="summaryDetail">0 calls</div>
+  </div>
+
+  <!-- Form -->
+  <div class="form-card">
+    <!-- Contact Name -->
+    <div class="form-section">
+      <label class="form-label">Contact Name</label>
+      <div class="autocomplete-wrapper">
+        <input type="text" class="text-input" id="contactInput" placeholder="Name" autocomplete="off" autocapitalize="words">
+        <div class="autocomplete-list" id="autocompleteList"></div>
+      </div>
+    </div>
+
+    <!-- Date -->
+    <div class="form-section">
+      <label class="form-label">Date</label>
+      <input type="date" class="text-input" id="dateInput">
+    </div>
+
+    <!-- Duration -->
+    <div class="form-section">
+      <label class="form-label">Duration</label>
+      <div class="duration-grid" id="durationGrid">
+        <button class="duration-btn" data-minutes="5">5 min</button>
+        <button class="duration-btn" data-minutes="10">10 min</button>
+        <button class="duration-btn" data-minutes="15">15 min</button>
+        <button class="duration-btn" data-minutes="20">20 min</button>
+        <button class="duration-btn" data-minutes="30">30 min</button>
+        <button class="duration-btn" data-minutes="45">45 min</button>
+        <button class="duration-btn" data-minutes="60">1 hr</button>
+      </div>
+      <div class="duration-custom-row">
+        <input type="number" class="duration-custom-input" id="customDuration" placeholder="—" min="1" max="480" inputmode="numeric">
+        <span class="duration-custom-label">minutes (custom)</span>
+      </div>
+    </div>
+
+    <!-- Call Type -->
+    <div class="form-section">
+      <label class="form-label">Call Type</label>
+      <div class="type-grid">
+        <button class="type-btn case-discussion" data-type="Case Discussion" id="btnCaseDiscussion">Case Discussion</button>
+        <button class="type-btn program-dev" data-type="Program Development" id="btnProgramDev">Program Development</button>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="form-section">
+      <label class="form-label">Notes <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <textarea class="notes-input" id="notesInput" placeholder="Brief note…"></textarea>
+    </div>
+
+    <!-- Log Button -->
+    <button class="log-btn" id="logBtn" disabled>Log Call</button>
+  </div>
+
+  <!-- Actions -->
+  <div class="action-bar">
+    <button class="action-btn" id="exportBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Export
+    </button>
+    <button class="action-btn" id="clearBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      Clear Month
+    </button>
+  </div>
+
+  <!-- Month navigation -->
+  <div class="section-divider"></div>
+  <div class="month-nav">
+    <button class="month-nav-btn" id="prevMonth">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="month-nav-title" id="monthNavTitle">March 2026</span>
+    <button class="month-nav-btn" id="nextMonth">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <!-- Call Log -->
+  <div id="callLog"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Confirm Dialog -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-dialog">
+    <p id="confirmMessage">Delete this entry?</p>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" id="confirmCancel">Cancel</button>
+      <button class="confirm-delete" id="confirmDelete">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ─── DATA ───
+  const CONTACTS = [
+    'Debby Miller',
+    'Dr. Jake Rice',
+    'Ashley Thompson',
+    'Dr. Sharalya',
+    'Dr. Mulder',
+    'Dr. Siddiqui',
+    'Dr. Gamber',
+    'Dr. Baselle',
+    'Dr. Lupton',
+    'Dr. Yallapragada'
+  ];
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // ─── STATE ───
+  let selectedDuration = null;
+  let selectedType = null;
+  let viewYear = 2026;
+  let viewMonth = 2; // 0-indexed, March = 2
+  let pendingDeleteId = null;
+
+  // Init view to current month
+  const now = new Date();
+  viewYear = now.getFullYear();
+  viewMonth = now.getMonth();
+
+  // ─── ELEMENTS ───
+  const contactInput = document.getElementById('contactInput');
+  const autocompleteList = document.getElementById('autocompleteList');
+  const dateInput = document.getElementById('dateInput');
+  const durationGrid = document.getElementById('durationGrid');
+  const customDuration = document.getElementById('customDuration');
+  const btnCaseDiscussion = document.getElementById('btnCaseDiscussion');
+  const btnProgramDev = document.getElementById('btnProgramDev');
+  const notesInput = document.getElementById('notesInput');
+  const logBtn = document.getElementById('logBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const callLog = document.getElementById('callLog');
+  const toast = document.getElementById('toast');
+  const summaryLabel = document.getElementById('summaryLabel');
+  const summaryValue = document.getElementById('summaryValue');
+  const summaryDetail = document.getElementById('summaryDetail');
+  const monthNavTitle = document.getElementById('monthNavTitle');
+  const prevMonth = document.getElementById('prevMonth');
+  const nextMonth = document.getElementById('nextMonth');
+  const confirmOverlay = document.getElementById('confirmOverlay');
+  const confirmMessage = document.getElementById('confirmMessage');
+  const confirmCancel = document.getElementById('confirmCancel');
+  const confirmDelete = document.getElementById('confirmDelete');
+
+  // ─── STORAGE ───
+  var _memoryStore = [];
+  var _storageAvailable = false;
+  try { var _t = '__test__'; window['localStorage'].setItem(_t, '1'); window['localStorage'].removeItem(_t); _storageAvailable = true; } catch(e) {}
+
+  function getEntries() {
+    if (_storageAvailable) {
+      try { return JSON.parse(window['localStorage'].getItem('callLogEntries') || '[]'); } catch { return []; }
+    }
+    return _memoryStore;
+  }
+
+  function saveEntries(entries) {
+    if (_storageAvailable) {
+      try { window['localStorage'].setItem('callLogEntries', JSON.stringify(entries)); } catch {}
+    }
+    _memoryStore = entries;
+  }
+
+  // ─── DATE DEFAULT ───
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  dateInput.value = todayStr();
+
+  // ─── AUTOCOMPLETE ───
+  contactInput.addEventListener('input', function() {
+    const val = this.value.trim().toLowerCase();
+    if (!val) {
+      autocompleteList.classList.remove('active');
+      return;
+    }
+    const matches = CONTACTS.filter(c => c.toLowerCase().includes(val));
+    if (matches.length === 0 || (matches.length === 1 && matches[0].toLowerCase() === val)) {
+      autocompleteList.classList.remove('active');
+      return;
+    }
+    autocompleteList.innerHTML = matches.map(m =>
+      `<div class="autocomplete-item">${m}</div>`
+    ).join('');
+    autocompleteList.classList.add('active');
+    updateLogBtn();
+  });
+
+  contactInput.addEventListener('blur', function() {
+    setTimeout(() => autocompleteList.classList.remove('active'), 150);
+  });
+
+  contactInput.addEventListener('keydown', function() {
+    setTimeout(updateLogBtn, 0);
+  });
+
+  autocompleteList.addEventListener('click', function(e) {
+    if (e.target.classList.contains('autocomplete-item')) {
+      contactInput.value = e.target.textContent;
+      autocompleteList.classList.remove('active');
+      updateLogBtn();
+    }
+  });
+
+  // ─── DURATION ───
+  durationGrid.addEventListener('click', function(e) {
+    const btn = e.target.closest('.duration-btn');
+    if (!btn) return;
+    document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedDuration = parseInt(btn.dataset.minutes);
+    customDuration.value = '';
+    updateLogBtn();
+  });
+
+  customDuration.addEventListener('input', function() {
+    if (this.value) {
+      document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+      selectedDuration = parseInt(this.value) || null;
+    } else {
+      selectedDuration = null;
+    }
+    updateLogBtn();
+  });
+
+  // ─── CALL TYPE ───
+  btnCaseDiscussion.addEventListener('click', function() {
+    selectedType = 'Case Discussion';
+    this.classList.add('selected');
+    btnProgramDev.classList.remove('selected');
+    updateLogBtn();
+  });
+
+  btnProgramDev.addEventListener('click', function() {
+    selectedType = 'Program Development';
+    this.classList.add('selected');
+    btnCaseDiscussion.classList.remove('selected');
+    updateLogBtn();
+  });
+
+  // ─── LOG BUTTON STATE ───
+  function updateLogBtn() {
+    const hasContact = contactInput.value.trim().length > 0;
+    const hasDuration = selectedDuration > 0;
+    const hasType = selectedType !== null;
+    logBtn.disabled = !(hasContact && hasDuration && hasType);
+  }
+
+  // ─── LOG CALL ───
+  logBtn.addEventListener('click', function() {
+    if (this.disabled) return;
+
+    const entry = {
+      id: Date.now() + Math.random(),
+      name: contactInput.value.trim(),
+      date: dateInput.value,
+      duration: selectedDuration,
+      type: selectedType,
+      notes: notesInput.value.trim()
+    };
+
+    const entries = getEntries();
+    entries.push(entry);
+    saveEntries(entries);
+
+    // Reset form
+    contactInput.value = '';
+    selectedDuration = null;
+    selectedType = null;
+    notesInput.value = '';
+    customDuration.value = '';
+    document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+    btnCaseDiscussion.classList.remove('selected');
+    btnProgramDev.classList.remove('selected');
+    logBtn.disabled = true;
+
+    // Set view to the logged entry's month
+    const d = new Date(entry.date + 'T00:00:00');
+    viewYear = d.getFullYear();
+    viewMonth = d.getMonth();
+
+    renderLog();
+    showToast('Call logged');
+  });
+
+  // ─── RENDER LOG ───
+  function renderLog() {
+    const entries = getEntries();
+
+    // Filter to view month
+    const filtered = entries.filter(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
+    });
+
+    // Update month nav
+    monthNavTitle.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+    summaryLabel.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+
+    // Calculate totals
+    const totalMin = filtered.reduce((sum, e) => sum + (e.duration || 0), 0);
+    const hrs = totalMin / 60;
+    if (totalMin >= 60) {
+      const wholeHrs = Math.floor(hrs * 10) / 10;
+      summaryValue.textContent = wholeHrs + ' hr' + (wholeHrs !== 1 ? 's' : '');
+    } else {
+      summaryValue.textContent = totalMin + ' min';
+    }
+    summaryDetail.textContent = filtered.length + ' call' + (filtered.length !== 1 ? 's' : '');
+
+    if (filtered.length === 0) {
+      callLog.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📞</div>
+          <div class="empty-state-text">No calls logged this month.<br>Use the form above to log a call.</div>
+        </div>
+      `;
+      return;
+    }
+
+    // Group by date
+    const groups = {};
+    filtered.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+    filtered.forEach(e => {
+      if (!groups[e.date]) groups[e.date] = [];
+      groups[e.date].push(e);
+    });
+
+    let html = '';
+    for (const [date, items] of Object.entries(groups)) {
+      const d = new Date(date + 'T00:00:00');
+      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const label = dayNames[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
+      html += `<div class="date-group">`;
+      html += `<div class="date-group-header">${label}</div>`;
+      items.forEach(e => {
+        const typeClass = e.type === 'Case Discussion' ? 'case-discussion' : 'program-dev';
+        const durLabel = e.duration >= 60 ? (e.duration / 60) + ' hr' : e.duration + ' min';
+        html += `
+          <div class="call-entry" data-id="${e.id}">
+            <div class="call-entry-dot ${typeClass}"></div>
+            <div class="call-entry-content">
+              <div class="call-entry-name">${escHtml(e.name)}</div>
+              <div class="call-entry-meta">${durLabel}</div>
+              <div class="call-entry-type ${typeClass}">${escHtml(e.type)}</div>
+              ${e.notes ? `<div class="call-entry-notes">${escHtml(e.notes)}</div>` : ''}
+            </div>
+            <button class="call-entry-delete" onclick="app.confirmDeleteEntry(${e.id})" aria-label="Delete entry">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+    callLog.innerHTML = html;
+  }
+
+  function escHtml(s) {
+    const el = document.createElement('span');
+    el.textContent = s;
+    return el.innerHTML;
+  }
+
+  // ─── DELETE ENTRY ───
+  function confirmDeleteEntry(id) {
+    pendingDeleteId = id;
+    confirmMessage.textContent = 'Delete this call entry?';
+    confirmOverlay.classList.add('active');
+  }
+
+  confirmCancel.addEventListener('click', function() {
+    confirmOverlay.classList.remove('active');
+    pendingDeleteId = null;
+  });
+
+  confirmDelete.addEventListener('click', function() {
+    if (pendingDeleteId !== null) {
+      let entries = getEntries();
+      entries = entries.filter(e => e.id !== pendingDeleteId);
+      saveEntries(entries);
+      pendingDeleteId = null;
+      confirmOverlay.classList.remove('active');
+      renderLog();
+      showToast('Entry deleted');
+    }
+  });
+
+  confirmOverlay.addEventListener('click', function(e) {
+    if (e.target === confirmOverlay) {
+      confirmOverlay.classList.remove('active');
+      pendingDeleteId = null;
+    }
+  });
+
+  // ─── CLEAR MONTH ───
+  clearBtn.addEventListener('click', function() {
+    const filtered = getEntries().filter(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
+    });
+    if (filtered.length === 0) {
+      showToast('No entries to clear');
+      return;
+    }
+    pendingDeleteId = 'clear-month';
+    confirmMessage.textContent = `Clear all ${filtered.length} entries for ${MONTHS[viewMonth]}?`;
+    confirmOverlay.classList.add('active');
+  });
+
+  // Override confirm delete for clear-month
+  const origConfirmDelete = confirmDelete.onclick;
+  confirmDelete.addEventListener('click', function() {
+    if (pendingDeleteId === 'clear-month') {
+      let entries = getEntries();
+      entries = entries.filter(e => {
+        const d = new Date(e.date + 'T00:00:00');
+        return !(d.getFullYear() === viewYear && d.getMonth() === viewMonth);
+      });
+      saveEntries(entries);
+      pendingDeleteId = null;
+      confirmOverlay.classList.remove('active');
+      renderLog();
+      showToast('Month cleared');
+    }
+  });
+
+  // ─── EXPORT ───
+  exportBtn.addEventListener('click', function() {
+    const entries = getEntries();
+    const filtered = entries.filter(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
+    });
+
+    if (filtered.length === 0) {
+      showToast('No entries to export');
+      return;
+    }
+
+    filtered.sort((a, b) => a.date.localeCompare(b.date) || a.id - b.id);
+
+    const monthLabel = MONTHS[viewMonth] + ' ' + viewYear;
+    let lines = [`Phone Call Log - ${monthLabel}`];
+
+    filtered.forEach(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const durLabel = e.duration + ' min';
+      let line = `${mm}/${dd} - ${e.name} (${durLabel}) - ${e.type}`;
+      if (e.notes) line += ` - ${e.notes}`;
+      lines.push(line);
+    });
+
+    const totalMin = filtered.reduce((sum, e) => sum + (e.duration || 0), 0);
+    const totalHrs = Math.round(totalMin / 60 * 10) / 10;
+    lines.push(`Total: ${totalMin} min (${totalHrs} hours)`);
+
+    const text = lines.join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Copied to clipboard');
+      }).catch(() => {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  });
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('Copied to clipboard');
+    } catch {
+      showToast('Could not copy');
+    }
+    document.body.removeChild(ta);
+  }
+
+  // ─── MONTH NAV ───
+  prevMonth.addEventListener('click', function() {
+    viewMonth--;
+    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    renderLog();
+  });
+
+  nextMonth.addEventListener('click', function() {
+    viewMonth++;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    renderLog();
+  });
+
+  // ─── TOAST ───
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2000);
+  }
+
+  // ─── EXPOSE FOR INLINE HANDLERS ───
+  window.app = { confirmDeleteEntry };
+
+  // ─── INIT ───
+  renderLog();
+})();
+</script>
+</body>
+</html>
